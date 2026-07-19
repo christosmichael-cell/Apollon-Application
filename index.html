@@ -305,6 +305,7 @@
   .compare-head .ch-stat { text-align: center; background: var(--page-plane); border-radius: 8px; padding: 6px 4px; }
   .compare-head .ch-stat .csv { font-size: 15px; font-weight: 700; }
   .compare-head .ch-stat .csl { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .03em; margin-top: 2px; }
+  #chartCompareRadar { max-width: 420px; margin: 0 auto; }
 
   .gauge-wrap { display: flex; flex-direction: column; align-items: center; }
   .gauge-value-label { font-size: 12px; color: var(--text-muted); margin-top: -64px; text-align: center; }
@@ -560,7 +561,7 @@
 
       <div class="card full">
         <h3>Test-by-test comparison</h3>
-        <p class="card-sub">Best value in each row is highlighted</p>
+        <p class="card-sub" id="compareTableSub">Best value in each row is highlighted</p>
         <div class="table-scroll"><table class="test-table" id="compareTable"></table></div>
       </div>
     </div>
@@ -1800,11 +1801,26 @@ function renderCompareRadar(containerId, selected) {
 
 function renderCompareTable(selected) {
   const table = document.getElementById('compareTable');
+  const sub = document.getElementById('compareTableSub');
   table.innerHTML = '';
   const chosen = selected.map(name => players.find(p => p.name === name)).filter(Boolean);
   if (chosen.length < 2) {
+    sub.textContent = 'Best value in each row is highlighted';
     table.innerHTML = '<tbody><tr><td style="padding:14px;color:var(--text-muted)">Pick at least 2 players above to compare.</td></tr></tbody>';
     return;
+  }
+
+  const sel = state.metric;
+  const selCategory = sel === 'cat_speed' ? 'speed' : sel === 'cat_screening' ? 'screening' : sel === 'cat_anthro' ? 'anthro' : null;
+  let rows = PROFILE_METRICS;
+  if (selCategory) {
+    rows = PROFILE_METRICS.filter(m => m.category === selCategory);
+    sub.textContent = `Filtered to: ${CATEGORIES[selCategory].label} · best value in each row is highlighted`;
+  } else if (sel !== 'overall' && METRIC_META[sel]) {
+    rows = PROFILE_METRICS.filter(m => m.metricKey === sel);
+    sub.textContent = `Filtered to: ${METRIC_META[sel].label} · best value in each row is highlighted`;
+  } else {
+    sub.textContent = 'Best value in each row is highlighted';
   }
 
   const thead = document.createElement('thead');
@@ -1813,7 +1829,7 @@ function renderCompareTable(selected) {
 
   const tbody = document.createElement('tbody');
   let lastCategory = null;
-  PROFILE_METRICS.forEach(m => {
+  rows.forEach(m => {
     if (m.category !== lastCategory) {
       lastCategory = m.category;
       const catRow = document.createElement('tr');
