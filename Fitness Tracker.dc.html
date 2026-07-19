@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #0A0C0B; font-family: 'Inter', system-ui, sans-serif; }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+</helmet>
+
+<div style="width:100%;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:48px 24px;background:radial-gradient(circle at 50% 20%, #14181A 0%, #0A0C0B 60%);">
+  <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402,874">
+
+    <div style="position:relative;height:100%;width:100%;background:#0A0C0B;color:#F5F7F5;font-family:'Inter',system-ui,sans-serif;overflow:hidden;">
+
+      <!-- ONBOARDING -->
+      <sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:76px 28px 40px;background:linear-gradient(180deg,#0F1412 0%,#0A0C0B 55%);">
+
+          <sc-if value="{{ onboarding.isWelcome }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:22px;">
+              <div style="width:88px;height:88px;border-radius:26px;background:linear-gradient(140deg,#35F28A,#1FAE63);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 32px rgba(53,242,138,0.28);">
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="none"><path d="M4 12h3l2-6 3 12 2-6h6" stroke="#06120C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;letter-spacing:-0.5px;">PULSE</div>
+                <div style="font-size:15px;color:rgba(245,247,245,0.55);margin-top:8px;line-height:1.5;max-width:260px;">Track workouts, watch your progress, keep the streak alive.</div>
+              </div>
+            </div>
+            <button onClick="{{ onboarding.next }}" style="border:none;background:#35F28A;color:#06120C;font-family:'Inter';font-weight:700;font-size:16px;padding:17px;border-radius:16px;cursor:pointer;">Get Started</button>
+          </sc-if>
+
+          <sc-if value="{{ onboarding.isGoals }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;margin-bottom:6px;">Set your goals</div>
+              <div style="font-size:14px;color:rgba(245,247,245,0.5);margin-bottom:32px;">You can always change these later.</div>
+
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="background:#15181A;border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;">
+                  <div><div style="font-size:14px;color:rgba(245,247,245,0.55);">Workouts / week</div><div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin-top:2px;">{{ goals.weeklyWorkouts }}</div></div>
+                  <div style="display:flex;gap:8px;">
+                    <button onClick="{{ goals.decWorkouts }}" style="width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,0.12);background:#1D2123;color:#F5F7F5;font-size:20px;cursor:pointer;">–</button>
+                    <button onClick="{{ goals.incWorkouts }}" style="width:40px;height:40px;border-radius:12px;border:none;background:#35F28A;color:#06120C;font-size:20px;cursor:pointer;">+</button>
+                  </div>
+                </div>
+                <div style="background:#15181A;border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;">
+                  <div><div style="font-size:14px;color:rgba(245,247,245,0.55);">Daily step goal</div><div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin-top:2px;">{{ goals.dailyStepsLabel }}</div></div>
+                  <div style="display:flex;gap:8px;">
+                    <button onClick="{{ goals.decSteps }}" style="width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,0.12);background:#1D2123;color:#F5F7F5;font-size:20px;cursor:pointer;">–</button>
+                    <button onClick="{{ goals.incSteps }}" style="width:40px;height:40px;border-radius:12px;border:none;background:#35F28A;color:#06120C;font-size:20px;cursor:pointer;">+</button>
+                  </div>
+                </div>
+                <div style="background:#15181A;border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;">
+                  <div><div style="font-size:14px;color:rgba(245,247,245,0.55);">Daily calorie goal</div><div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin-top:2px;">{{ goals.dailyCalories }}</div></div>
+                  <div style="display:flex;gap:8px;">
+                    <button onClick="{{ goals.decCalories }}" style="width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,0.12);background:#1D2123;color:#F5F7F5;font-size:20px;cursor:pointer;">–</button>
+                    <button onClick="{{ goals.incCalories }}" style="width:40px;height:40px;border-radius:12px;border:none;background:#35F28A;color:#06120C;font-size:20px;cursor:pointer;">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button onClick="{{ onboarding.next }}" style="border:none;background:#35F28A;color:#06120C;font-family:'Inter';font-weight:700;font-size:16px;padding:17px;border-radius:16px;cursor:pointer;margin-top:20px;">Continue</button>
+          </sc-if>
+
+          <sc-if value="{{ onboarding.isDone }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px;">
+              <div style="width:88px;height:88px;border-radius:50%;background:rgba(53,242,138,0.12);border:2px solid #35F28A;display:flex;align-items:center;justify-content:center;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#35F28A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;">You're all set, {{ profileFirstName }}</div>
+              <div style="font-size:14px;color:rgba(245,247,245,0.5);max-width:250px;line-height:1.5;">Let's get your first workout logged.</div>
+            </div>
+            <button onClick="{{ onboarding.finish }}" style="border:none;background:#35F28A;color:#06120C;font-family:'Inter';font-weight:700;font-size:16px;padding:17px;border-radius:16px;cursor:pointer;">Enter Pulse</button>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <!-- MAIN APP -->
+      <sc-if value="{{ isMainApp }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;">
+          <div style="flex:1;overflow:auto;padding-bottom:12px;">
+
+            <!-- DASHBOARD -->
+            <sc-if value="{{ tabActive.dashboard }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:58px 20px 8px;">
+                <div style="font-size:14px;color:rgba(245,247,245,0.5);">{{ dashboard.dateLabel }}</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin-top:2px;">{{ dashboard.greeting }}</div>
+              </div>
+
+              <div style="display:flex;gap:12px;padding:18px 20px 4px;">
+                <div style="flex:1;background:#15181A;border-radius:20px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+                  <svg width="64" height="64" viewBox="0 0 64 64">
+                    <circle cx="32" cy="32" r="26" stroke="rgba(255,255,255,0.08)" stroke-width="6" fill="none"/>
+                    <circle cx="32" cy="32" r="26" stroke="#35F28A" stroke-width="6" fill="none" stroke-linecap="round" transform="rotate(-90 32 32)" stroke-dasharray="{{ dashboard.stepsCirc }}" stroke-dashoffset="{{ dashboard.stepsOffset }}"/>
+                  </svg>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin-top:-42px;">{{ dashboard.stepsLabel }}</div>
+                  <div style="font-size:11px;color:rgba(245,247,245,0.45);margin-top:20px;">Steps</div>
+                </div>
+                <div style="flex:1;background:#15181A;border-radius:20px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+                  <svg width="64" height="64" viewBox="0 0 64 64">
+                    <circle cx="32" cy="32" r="26" stroke="rgba(255,255,255,0.08)" stroke-width="6" fill="none"/>
+                    <circle cx="32" cy="32" r="26" stroke="#FF7A33" stroke-width="6" fill="none" stroke-linecap="round" transform="rotate(-90 32 32)" stroke-dasharray="{{ dashboard.calCirc }}" stroke-dashoffset="{{ dashboard.calOffset }}"/>
+                  </svg>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin-top:-42px;">{{ dashboard.calLabel }}</div>
+                  <div style="font-size:11px;color:rgba(245,247,245,0.45);margin-top:20px;">Calories</div>
+                </div>
+                <div style="flex:1;background:#15181A;border-radius:20px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+                  <svg width="64" height="64" viewBox="0 0 64 64">
+                    <circle cx="32" cy="32" r="26" stroke="rgba(255,255,255,0.08)" stroke-width="6" fill="none"/>
+                    <circle cx="32" cy="32" r="26" stroke="#7AA8FF" stroke-width="6" fill="none" stroke-linecap="round" transform="rotate(-90 32 32)" stroke-dasharray="{{ dashboard.activeCirc }}" stroke-dashoffset="{{ dashboard.activeOffset }}"/>
+                  </svg>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;margin-top:-42px;">{{ dashboard.activeLabel }}</div>
+                  <div style="font-size:11px;color:rgba(245,247,245,0.45);margin-top:20px;">Active min</div>
+                </div>
+              </div>
+
+              <div style="margin:16px 20px 0;background:linear-gradient(135deg,#15181A,#191D1E);border-radius:20px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(255,255,255,0.06);">
+                <div>
+                  <div style="font-size:13px;color:rgba(245,247,245,0.5);">This week</div>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;margin-top:2px;">{{ dashboard.weekCount }} / {{ dashboard.weekGoal }} workouts</div>
+                  <div style="height:6px;background:rgba(255,255,255,0.08);border-radius:4px;margin-top:10px;width:160px;overflow:hidden;"><div style="height:100%;background:#35F28A;border-radius:4px;width:{{ dashboard.weekPctLabel }};"></div></div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                  <div style="font-size:22px;">🔥</div>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#FF7A33;">{{ dashboard.streak }}</div>
+                  <div style="font-size:10px;color:rgba(245,247,245,0.4);">day streak</div>
+                </div>
+              </div>
+
+              <div style="padding:24px 20px 8px;display:flex;align-items:center;justify-content:space-between;">
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;">Recent workouts</div>
+                <div onClick="{{ nav.goLog }}" style="font-size:13px;color:#35F28A;cursor:pointer;">See all</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;padding:4px 20px 24px;">
+                <sc-for list="{{ dashboard.recent }}" as="w" hint-placeholder-count="3">
+                  <div onClick="{{ w.open }}" style="background:#15181A;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;border:1px solid rgba(255,255,255,0.06);">
+                    <div style="width:42px;height:42px;border-radius:12px;background:{{ w.iconBg }};display:flex;align-items:center;justify-content:center;font-size:18px;">{{ w.emoji }}</div>
+                    <div style="flex:1;">
+                      <div style="font-size:15px;font-weight:600;">{{ w.name }}</div>
+                      <div style="font-size:12px;color:rgba(245,247,245,0.45);margin-top:2px;">{{ w.subtitle }}</div>
+                    </div>
+                    <div style="font-size:12px;color:rgba(245,247,245,0.4);">{{ w.dateLabel }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <!-- LOG -->
+            <sc-if value="{{ tabActive.log }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:58px 20px 12px;display:flex;align-items:center;justify-content:space-between;">
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;">Workout Log</div>
+                <button onClick="{{ log.openAdd }}" style="width:38px;height:38px;border-radius:12px;border:none;background:#35F28A;color:#06120C;font-size:22px;line-height:0;cursor:pointer;">+</button>
+              </div>
+              <div style="display:flex;gap:8px;padding:0 20px 16px;">
+                <sc-for list="{{ log.filters }}" as="f" hint-placeholder-count="3">
+                  <div onClick="{{ f.select }}" style="padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;background:{{ f.bg }};color:{{ f.color }};">{{ f.label }}</div>
+                </sc-for>
+              </div>
+              <div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:20px;">
+                <sc-for list="{{ log.groups }}" as="g" hint-placeholder-count="4">
+                  <div>
+                    <div style="font-size:12px;color:rgba(245,247,245,0.4);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">{{ g.label }}</div>
+                    <div style="display:flex;flex-direction:column;gap:10px;">
+                      <sc-for list="{{ g.items }}" as="w" hint-placeholder-count="2">
+                        <div onClick="{{ w.open }}" style="background:#15181A;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;border:1px solid rgba(255,255,255,0.06);">
+                          <div style="width:42px;height:42px;border-radius:12px;background:{{ w.iconBg }};display:flex;align-items:center;justify-content:center;font-size:18px;">{{ w.emoji }}</div>
+                          <div style="flex:1;">
+                            <div style="font-size:15px;font-weight:600;">{{ w.name }}</div>
+                            <div style="font-size:12px;color:rgba(245,247,245,0.45);margin-top:2px;">{{ w.subtitle }}</div>
+                          </div>
+                          <div style="font-size:12px;color:rgba(245,247,245,0.4);">{{ w.meta }}</div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <!-- CHARTS -->
+            <sc-if value="{{ tabActive.charts }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:58px 20px 12px;">
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;">Progress</div>
+              </div>
+              <div style="display:flex;gap:8px;padding:0 20px 18px;overflow:auto;">
+                <sc-for list="{{ charts.tabs }}" as="t" hint-placeholder-count="4">
+                  <div onClick="{{ t.select }}" style="white-space:nowrap;padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;background:{{ t.bg }};color:{{ t.color }};">{{ t.label }}</div>
+                </sc-for>
+              </div>
+
+              <sc-if value="{{ charts.isWeight }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:0 20px;background:#15181A;border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,0.06);">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+                    <div><div style="font-size:12px;color:rgba(245,247,245,0.45);">Current</div><div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;">{{ charts.weightLatest }}</div></div>
+                    <div style="color:#35F28A;font-size:14px;font-weight:600;">{{ charts.weightChangeLabel }}</div>
+                  </div>
+                  <svg width="100%" height="120" viewBox="0 0 320 120" preserveAspectRatio="none">
+                    <polyline points="{{ charts.weightPoints }}" fill="none" stroke="#35F28A" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+                  </svg>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(245,247,245,0.35);margin-top:6px;"><span>{{ charts.weightStartLabel }}</span><span>Today</span></div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ charts.isVolume }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:0 20px;background:#15181A;border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,0.06);">
+                  <div style="font-size:12px;color:rgba(245,247,245,0.45);margin-bottom:14px;">Weekly volume lifted (lb)</div>
+                  <div style="display:flex;align-items:flex-end;gap:10px;height:120px;">
+                    <sc-for list="{{ charts.volumeWeeks }}" as="wk" hint-placeholder-count="6">
+                      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;">
+                        <div style="width:100%;background:#35F28A;border-radius:6px 6px 0 0;height:{{ wk.barHeight }};"></div>
+                        <div style="font-size:10px;color:rgba(245,247,245,0.4);">{{ wk.label }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ charts.isStreak }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:0 20px;background:#15181A;border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,0.06);">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                    <div style="font-size:12px;color:rgba(245,247,245,0.45);">Last 12 weeks</div>
+                    <div style="font-size:13px;color:#FF7A33;font-weight:600;">🔥 {{ dashboard.streak }} day streak</div>
+                  </div>
+                  <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:4px;">
+                    <sc-for list="{{ charts.heatCells }}" as="c" hint-placeholder-count="84">
+                      <div style="width:100%;aspect-ratio:1;border-radius:3px;background:{{ c.color }};"></div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ charts.isPR }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:0 20px;display:flex;flex-direction:column;gap:10px;">
+                  <sc-for list="{{ charts.prList }}" as="p" hint-placeholder-count="5">
+                    <div style="background:#15181A;border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(255,255,255,0.06);">
+                      <div>
+                        <div style="font-size:15px;font-weight:600;">{{ p.exercise }}</div>
+                        <div style="font-size:12px;color:rgba(245,247,245,0.45);margin-top:2px;">{{ p.dateLabel }}</div>
+                      </div>
+                      <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#35F28A;">{{ p.weightLabel }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="height:24px;"></div>
+            </sc-if>
+
+            <!-- SOCIAL -->
+            <sc-if value="{{ tabActive.social }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:58px 20px 12px;">
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;">Leaderboard</div>
+                <div style="font-size:13px;color:rgba(245,247,245,0.45);margin-top:2px;">Weekly points among friends</div>
+              </div>
+              <div style="padding:8px 20px 24px;display:flex;flex-direction:column;gap:10px;">
+                <sc-for list="{{ social.rows }}" as="r" hint-placeholder-count="6">
+                  <div style="background:{{ r.bg }};border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px;border:1px solid {{ r.border }};">
+                    <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:rgba(245,247,245,0.4);width:20px;">{{ r.rank }}</div>
+                    <div style="width:38px;height:38px;border-radius:50%;background:{{ r.avatarBg }};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#06120C;">{{ r.initial }}</div>
+                    <div style="flex:1;">
+                      <div style="font-size:15px;font-weight:600;">{{ r.name }}</div>
+                      <div style="font-size:12px;color:rgba(245,247,245,0.45);">{{ r.meta }}</div>
+                    </div>
+                    <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#35F28A;">{{ r.points }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <!-- PROFILE -->
+            <sc-if value="{{ tabActive.profile }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:58px 20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+                <div style="width:76px;height:76px;border-radius:50%;background:linear-gradient(140deg,#35F28A,#1FAE63);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:#06120C;">{{ profileInitial }}</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;">{{ profileName }}</div>
+                <div style="font-size:13px;color:rgba(245,247,245,0.45);">{{ profile.memberSince }}</div>
+              </div>
+
+              <div style="display:flex;gap:10px;padding:8px 20px 20px;">
+                <div style="flex:1;background:#15181A;border-radius:16px;padding:14px;text-align:center;border:1px solid rgba(255,255,255,0.06);">
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;">{{ profile.totalWorkouts }}</div>
+                  <div style="font-size:11px;color:rgba(245,247,245,0.45);margin-top:2px;">Workouts</div>
+                </div>
+                <div style="flex:1;background:#15181A;border-radius:16px;padding:14px;text-align:center;border:1px solid rgba(255,255,255,0.06);">
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#FF7A33;">{{ dashboard.streak }}</div>
+                  <div style="font-size:11px;color:rgba(245,247,245,0.45);margin-top:2px;">Day streak</div>
+                </div>
+                <div style="flex:1;background:#15181A;border-radius:16px;padding:14px;text-align:center;border:1px solid rgba(255,255,255,0.06);">
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;">{{ charts.weightLatest }}</div>
+                  <div style="font-size:11px;color:rgba(245,247,245,0.45);margin-top:2px;">Weight</div>
+                </div>
+              </div>
+
+              <div style="padding:0 20px;">
+                <div style="font-size:12px;color:rgba(245,247,245,0.4);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Goals</div>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <div style="background:#15181A;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
+                    <div><div style="font-size:13px;color:rgba(245,247,245,0.55);">Workouts / week</div><div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;">{{ goals.weeklyWorkouts }}</div></div>
+                    <div style="display:flex;gap:6px;"><button onClick="{{ goals.decWorkouts }}" style="width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:#1D2123;color:#F5F7F5;font-size:16px;cursor:pointer;">–</button><button onClick="{{ goals.incWorkouts }}" style="width:34px;height:34px;border-radius:10px;border:none;background:#35F28A;color:#06120C;font-size:16px;cursor:pointer;">+</button></div>
+                  </div>
+                  <div style="background:#15181A;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
+                    <div><div style="font-size:13px;color:rgba(245,247,245,0.55);">Daily steps</div><div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;">{{ goals.dailyStepsLabel }}</div></div>
+                    <div style="display:flex;gap:6px;"><button onClick="{{ goals.decSteps }}" style="width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:#1D2123;color:#F5F7F5;font-size:16px;cursor:pointer;">–</button><button onClick="{{ goals.incSteps }}" style="width:34px;height:34px;border-radius:10px;border:none;background:#35F28A;color:#06120C;font-size:16px;cursor:pointer;">+</button></div>
+                  </div>
+                  <div style="background:#15181A;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
+                    <div><div style="font-size:13px;color:rgba(245,247,245,0.55);">Daily calories</div><div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;">{{ goals.dailyCalories }}</div></div>
+                    <div style="display:flex;gap:6px;"><button onClick="{{ goals.decCalories }}" style="width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:#1D2123;color:#F5F7F5;font-size:16px;cursor:pointer;">–</button><button onClick="{{ goals.incCalories }}" style="width:34px;height:34px;border-radius:10px;border:none;background:#35F28A;color:#06120C;font-size:16px;cursor:pointer;">+</button></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="padding:20px;">
+                <div style="font-size:12px;color:rgba(245,247,245,0.4);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Settings</div>
+                <div style="background:#15181A;border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;">
+                  <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);"><div style="font-size:14px;">Units</div><div style="font-size:14px;color:#35F28A;font-weight:600;">lb</div></div>
+                  <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);"><div style="font-size:14px;">Notifications</div><div style="font-size:14px;color:rgba(245,247,245,0.4);">On</div></div>
+                  <div onClick="{{ profile.restart }}" style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;"><div style="font-size:14px;color:#FF7A33;">Restart onboarding</div></div>
+                </div>
+              </div>
+            </sc-if>
+
+          </div>
+
+          <!-- TAB BAR -->
+          <div style="display:flex;padding:10px 6px 4px;background:rgba(21,24,26,0.92);border-top:1px solid rgba(255,255,255,0.06);">
+            <div onClick="{{ nav.goDashboard }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ tabActive.dashboardColor }};">
+              <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/></svg>
+              <div style="font-size:10px;font-weight:600;">Home</div>
+            </div>
+            <div onClick="{{ nav.goLog }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ tabActive.logColor }};">
+              <svg width="22" height="22" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="2.4" rx="1.2" fill="currentColor"/><rect x="4" y="11" width="16" height="2.4" rx="1.2" fill="currentColor"/><rect x="4" y="17" width="10" height="2.4" rx="1.2" fill="currentColor"/></svg>
+              <div style="font-size:10px;font-weight:600;">Log</div>
+            </div>
+            <div onClick="{{ nav.goCharts }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ tabActive.chartsColor }};">
+              <svg width="22" height="22" viewBox="0 0 24 24"><rect x="4" y="12" width="4" height="8" rx="1" fill="currentColor"/><rect x="10" y="7" width="4" height="13" rx="1" fill="currentColor"/><rect x="16" y="3" width="4" height="17" rx="1" fill="currentColor"/></svg>
+              <div style="font-size:10px;font-weight:600;">Charts</div>
+            </div>
+            <div onClick="{{ nav.goSocial }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ tabActive.socialColor }};">
+              <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="9" cy="9" r="4" fill="currentColor" opacity="0.9"/><circle cx="16" cy="11" r="3.4" fill="currentColor" opacity="0.55"/></svg>
+              <div style="font-size:10px;font-weight:600;">Social</div>
+            </div>
+            <div onClick="{{ nav.goProfile }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ tabActive.profileColor }};">
+              <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="currentColor"/></svg>
+              <div style="font-size:10px;font-weight:600;">Profile</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- WORKOUT DETAIL OVERLAY -->
+      <sc-if value="{{ detail.active }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:45;background:#0D1010;display:flex;flex-direction:column;">
+          <div style="padding:58px 20px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <div onClick="{{ detail.close }}" style="width:36px;height:36px;border-radius:10px;background:#1D2123;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+              <svg width="16" height="16" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="#F5F7F5" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;">Workout</div>
+            <div style="width:36px;"></div>
+          </div>
+          <div style="flex:1;overflow:auto;padding:20px;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+              <div style="width:52px;height:52px;border-radius:14px;background:{{ detail.iconBg }};display:flex;align-items:center;justify-content:center;font-size:22px;">{{ detail.emoji }}</div>
+              <div><div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;">{{ detail.name }}</div><div style="font-size:13px;color:rgba(245,247,245,0.45);margin-top:2px;">{{ detail.dateLabel }}</div></div>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:24px;">
+              <div style="flex:1;background:#15181A;border-radius:14px;padding:12px;text-align:center;"><div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;">{{ detail.stat1Val }}</div><div style="font-size:11px;color:rgba(245,247,245,0.45);">{{ detail.stat1Label }}</div></div>
+              <div style="flex:1;background:#15181A;border-radius:14px;padding:12px;text-align:center;"><div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;">{{ detail.stat2Val }}</div><div style="font-size:11px;color:rgba(245,247,245,0.45);">{{ detail.stat2Label }}</div></div>
+              <div style="flex:1;background:#15181A;border-radius:14px;padding:12px;text-align:center;"><div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;">{{ detail.stat3Val }}</div><div style="font-size:11px;color:rgba(245,247,245,0.45);">{{ detail.stat3Label }}</div></div>
+            </div>
+            <sc-if value="{{ detail.hasExercises }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <sc-for list="{{ detail.exercises }}" as="ex" hint-placeholder-count="2">
+                  <div style="background:#15181A;border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size:15px;font-weight:600;margin-bottom:10px;">{{ ex.name }}</div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                      <sc-for list="{{ ex.sets }}" as="s" hint-placeholder-count="3">
+                        <div style="display:flex;justify-content:space-between;font-size:13px;color:rgba(245,247,245,0.6);padding:4px 0;">
+                          <span>Set {{ s.n }}</span><span>{{ s.label }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ADD WORKOUT FLOW -->
+      <sc-if value="{{ add.active }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:45;background:#0D1010;display:flex;flex-direction:column;">
+          <div style="padding:58px 20px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <div onClick="{{ add.back }}" style="width:36px;height:36px;border-radius:10px;background:#1D2123;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+              <svg width="14" height="16" viewBox="0 0 12 20"><path d="M10 2L2 10l8 8" stroke="#F5F7F5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            </div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;">{{ add.title }}</div>
+            <div onClick="{{ add.close }}" style="width:36px;height:36px;border-radius:10px;background:#1D2123;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+              <svg width="16" height="16" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="#F5F7F5" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+          <div style="flex:1;overflow:auto;padding:20px;">
+
+            <sc-if value="{{ add.isType }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div onClick="{{ add.chooseStrength }}" style="background:#15181A;border-radius:18px;padding:22px;display:flex;align-items:center;gap:16px;cursor:pointer;border:1px solid rgba(255,255,255,0.06);">
+                  <div style="width:50px;height:50px;border-radius:14px;background:rgba(53,242,138,0.15);display:flex;align-items:center;justify-content:center;font-size:24px;">🏋️</div>
+                  <div><div style="font-size:16px;font-weight:700;">Strength</div><div style="font-size:13px;color:rgba(245,247,245,0.45);margin-top:2px;">Log sets, reps &amp; weight</div></div>
+                </div>
+                <div onClick="{{ add.chooseCardio }}" style="background:#15181A;border-radius:18px;padding:22px;display:flex;align-items:center;gap:16px;cursor:pointer;border:1px solid rgba(255,255,255,0.06);">
+                  <div style="width:50px;height:50px;border-radius:14px;background:rgba(255,122,51,0.15);display:flex;align-items:center;justify-content:center;font-size:24px;">🏃</div>
+                  <div><div style="font-size:16px;font-weight:700;">Cardio</div><div style="font-size:13px;color:rgba(245,247,245,0.45);margin-top:2px;">Log distance &amp; duration</div></div>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ add.isExercise }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <sc-for list="{{ add.exerciseOptions }}" as="e" hint-placeholder-count="8">
+                  <div onClick="{{ e.select }}" style="background:#15181A;border-radius:14px;padding:15px 16px;font-size:15px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,0.06);">{{ e.name }}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ add.isCardioType }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <sc-for list="{{ add.cardioOptions }}" as="e" hint-placeholder-count="5">
+                  <div onClick="{{ e.select }}" style="background:#15181A;border-radius:14px;padding:15px 16px;font-size:15px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,0.06);">{{ e.name }}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ add.isLog }}" hint-placeholder-val="{{ false }}">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;margin-bottom:16px;">{{ add.exercise }}</div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <sc-for list="{{ add.sets }}" as="s" hint-placeholder-count="3">
+                  <div style="background:#15181A;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size:13px;color:rgba(245,247,245,0.4);width:44px;">Set {{ s.n }}</div>
+                    <div style="flex:1;display:flex;align-items:center;justify-content:space-between;">
+                      <div style="text-align:center;"><div style="font-size:10px;color:rgba(245,247,245,0.4);">REPS</div><div style="display:flex;align-items:center;gap:8px;margin-top:2px;"><button onClick="{{ s.decReps }}" style="width:26px;height:26px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:#1D2123;color:#fff;cursor:pointer;">–</button><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;width:24px;text-align:center;">{{ s.reps }}</div><button onClick="{{ s.incReps }}" style="width:26px;height:26px;border-radius:8px;border:none;background:#35F28A;color:#06120C;cursor:pointer;">+</button></div></div>
+                      <div style="text-align:center;"><div style="font-size:10px;color:rgba(245,247,245,0.4);">LB</div><div style="display:flex;align-items:center;gap:8px;margin-top:2px;"><button onClick="{{ s.decWeight }}" style="width:26px;height:26px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:#1D2123;color:#fff;cursor:pointer;">–</button><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;width:34px;text-align:center;">{{ s.weight }}</div><button onClick="{{ s.incWeight }}" style="width:26px;height:26px;border-radius:8px;border:none;background:#35F28A;color:#06120C;cursor:pointer;">+</button></div></div>
+                    </div>
+                    <div onClick="{{ s.remove }}" style="color:rgba(245,247,245,0.3);font-size:18px;cursor:pointer;padding:0 2px;">×</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div onClick="{{ add.addSet }}" style="margin-top:12px;text-align:center;padding:12px;border-radius:14px;border:1.5px dashed rgba(255,255,255,0.15);color:#35F28A;font-size:14px;font-weight:600;cursor:pointer;">+ Add set</div>
+            </sc-if>
+
+            <sc-if value="{{ add.isCardioLog }}" hint-placeholder-val="{{ false }}">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;margin-bottom:16px;">{{ add.cardioType }}</div>
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="background:#15181A;border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;">
+                  <div><div style="font-size:13px;color:rgba(245,247,245,0.5);">Distance (mi)</div><div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;margin-top:2px;">{{ add.distanceLabel }}</div></div>
+                  <div style="display:flex;gap:8px;"><button onClick="{{ add.decDistance }}" style="width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:#1D2123;color:#fff;font-size:18px;cursor:pointer;">–</button><button onClick="{{ add.incDistance }}" style="width:36px;height:36px;border-radius:10px;border:none;background:#35F28A;color:#06120C;font-size:18px;cursor:pointer;">+</button></div>
+                </div>
+                <div style="background:#15181A;border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;">
+                  <div><div style="font-size:13px;color:rgba(245,247,245,0.5);">Duration (min)</div><div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;margin-top:2px;">{{ add.duration }}</div></div>
+                  <div style="display:flex;gap:8px;"><button onClick="{{ add.decDuration }}" style="width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:#1D2123;color:#fff;font-size:18px;cursor:pointer;">–</button><button onClick="{{ add.incDuration }}" style="width:36px;height:36px;border-radius:10px;border:none;background:#35F28A;color:#06120C;font-size:18px;cursor:pointer;">+</button></div>
+                </div>
+                <div style="background:#15181A;border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;">
+                  <div style="font-size:13px;color:rgba(245,247,245,0.5);">Pace</div>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;">{{ add.paceLabel }}</div>
+                </div>
+              </div>
+            </sc-if>
+
+          </div>
+<sc-if value="{{ add.showSave }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:14px 20px 28px;border-top:1px solid rgba(255,255,255,0.06);">
+              <button onClick="{{ add.save }}" style="width:100%;border:none;background:#35F28A;color:#06120C;font-family:'Inter';font-weight:700;font-size:16px;padding:17px;border-radius:16px;cursor:pointer;">{{ add.saveLabel }}</button>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+    </div>
+  </x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const EXERCISE_LIB = {
+  strength: ['Bench Press', 'Back Squat', 'Deadlift', 'Overhead Press', 'Barbell Row', 'Pull-Up', 'Bicep Curl', 'Leg Press'],
+  cardio: ['Running', 'Cycling', 'Rowing', 'Swimming', 'Elliptical'],
+};
+const CARDIO_EMOJI = { Running: '🏃', Cycling: '🚴', Rowing: '🚣', Swimming: '🏊', Elliptical: '🚶' };
+const DAY_MS = 86400000;
+
+function fmtDate(d) {
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+function relDateLabel(d, now) {
+  const days = Math.floor((now - d) / DAY_MS);
+  if (days === 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  if (days < 7) return d.toLocaleDateString('en-US', { weekday: 'long' });
+  return fmtDate(d);
+}
+function comma(n) { return Math.round(n).toLocaleString('en-US'); }
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const now = new Date();
+    const daysAgo = (n) => new Date(now.getTime() - n * DAY_MS);
+
+    const seedWorkouts = [
+      { id: 'w1', type: 'strength', name: 'Push Day', date: daysAgo(0), emoji: '🏋️', iconBg: 'rgba(53,242,138,0.15)',
+        exercises: [
+          { name: 'Bench Press', sets: [{ reps: 8, weight: 135 }, { reps: 8, weight: 145 }, { reps: 6, weight: 155 }] },
+          { name: 'Overhead Press', sets: [{ reps: 10, weight: 65 }, { reps: 8, weight: 75 }] },
+        ] },
+      { id: 'w2', type: 'cardio', name: 'Running', date: daysAgo(1), emoji: '🏃', iconBg: 'rgba(255,122,51,0.15)',
+        distance: 4.2, duration: 34 },
+      { id: 'w3', type: 'strength', name: 'Leg Day', date: daysAgo(2), emoji: '🏋️', iconBg: 'rgba(53,242,138,0.15)',
+        exercises: [
+          { name: 'Back Squat', sets: [{ reps: 6, weight: 185 }, { reps: 6, weight: 195 }, { reps: 5, weight: 205 }] },
+          { name: 'Leg Press', sets: [{ reps: 10, weight: 270 }, { reps: 10, weight: 290 }] },
+        ] },
+      { id: 'w4', type: 'cardio', name: 'Cycling', date: daysAgo(4), emoji: '🚴', iconBg: 'rgba(255,122,51,0.15)',
+        distance: 12.5, duration: 48 },
+      { id: 'w5', type: 'strength', name: 'Pull Day', date: daysAgo(5), emoji: '🏋️', iconBg: 'rgba(53,242,138,0.15)',
+        exercises: [
+          { name: 'Deadlift', sets: [{ reps: 5, weight: 225 }, { reps: 5, weight: 245 }, { reps: 3, weight: 265 }] },
+          { name: 'Barbell Row', sets: [{ reps: 10, weight: 115 }, { reps: 10, weight: 125 }] },
+        ] },
+      { id: 'w6', type: 'strength', name: 'Push Day', date: daysAgo(8), emoji: '🏋️', iconBg: 'rgba(53,242,138,0.15)',
+        exercises: [{ name: 'Bench Press', sets: [{ reps: 8, weight: 130 }, { reps: 8, weight: 140 }] }] },
+      { id: 'w7', type: 'cardio', name: 'Running', date: daysAgo(9), emoji: '🏃', iconBg: 'rgba(255,122,51,0.15)',
+        distance: 3.1, duration: 27 },
+      { id: 'w8', type: 'strength', name: 'Leg Day', date: daysAgo(11), emoji: '🏋️', iconBg: 'rgba(53,242,138,0.15)',
+        exercises: [{ name: 'Back Squat', sets: [{ reps: 6, weight: 175 }, { reps: 6, weight: 185 }] }] },
+      { id: 'w9', type: 'cardio', name: 'Swimming', date: daysAgo(14), emoji: '🏊', iconBg: 'rgba(255,122,51,0.15)',
+        distance: 1.2, duration: 40 },
+      { id: 'w10', type: 'strength', name: 'Pull Day', date: daysAgo(16), emoji: '🏋️', iconBg: 'rgba(53,242,138,0.15)',
+        exercises: [{ name: 'Deadlift', sets: [{ reps: 5, weight: 215 }, { reps: 5, weight: 225 }] }] },
+    ];
+
+    const seedWeight = [182.4, 181.8, 181.9, 181.2, 180.6, 180.8, 180.1, 179.6, 179.2, 178.7].map((w, i) => ({
+      date: daysAgo((9 - i) * 6), weight: w,
+    }));
+
+    const seedVolume = [8200, 9100, 8700, 9800, 10200, 11050].map((v, i) => ({ label: `W${i + 1}`, volume: v }));
+
+    const seedPR = [
+      { exercise: 'Deadlift', weight: 265, date: daysAgo(0) },
+      { exercise: 'Back Squat', weight: 205, date: daysAgo(2) },
+      { exercise: 'Bench Press', weight: 155, date: daysAgo(0) },
+      { exercise: 'Overhead Press', weight: 75, date: daysAgo(0) },
+      { exercise: 'Barbell Row', weight: 125, date: daysAgo(5) },
+    ];
+
+    const seedSocial = [
+      { rank: 1, name: 'Jordan K.', initial: 'J', points: 4820, meta: '6 workouts', me: false },
+      { rank: 2, name: 'Alex Rivera', initial: 'A', points: 4310, meta: '5 workouts', me: true },
+      { rank: 3, name: 'Sam T.', initial: 'S', points: 3990, meta: '5 workouts', me: false },
+      { rank: 4, name: 'Priya N.', initial: 'P', points: 3540, meta: '4 workouts', me: false },
+      { rank: 5, name: 'Miguel D.', initial: 'M', points: 3120, meta: '4 workouts', me: false },
+      { rank: 6, name: 'Casey L.', initial: 'C', points: 2700, meta: '3 workouts', me: false },
+    ];
+
+    // 12 weeks * 7 days heat data (mock consistency, denser recently)
+    const seedHeat = [];
+    for (let i = 83; i >= 0; i--) {
+      const active = Math.random() > (i < 20 ? 0.35 : 0.55);
+      seedHeat.push(active ? (Math.random() > 0.6 ? 2 : 1) : 0);
+    }
+
+    this.state = {
+      screen: 'onboarding',
+      onboardingStep: 0,
+      activeTab: 'dashboard',
+      goals: { weeklyWorkouts: 4, dailySteps: 8000, dailyCalories: 2200 },
+      profile: { firstName: 'Alex', name: 'Alex Rivera', memberSince: 'Member since Jan 2025' },
+      todaySteps: 6240,
+      todayCalories: 480,
+      todayActive: 42,
+      streak: 12,
+      workouts: seedWorkouts,
+      weightLog: seedWeight,
+      volumeWeeks: seedVolume,
+      prList: seedPR,
+      social: seedSocial,
+      heat: seedHeat,
+      logFilter: 'all',
+      chartsTab: 'weight',
+      detailWorkoutId: null,
+      add: null,
+    };
+  }
+
+  // ---------- nav ----------
+  goTab(tab) { this.setState({ activeTab: tab, detailWorkoutId: null }); }
+
+  // ---------- onboarding ----------
+  onbNext() { this.setState(s => ({ onboardingStep: s.onboardingStep + 1 })); }
+  onbFinish() { this.setState({ screen: 'main' }); }
+
+  // ---------- goals ----------
+  bumpGoal(key, delta, min, max, step) {
+    this.setState(s => {
+      const cur = s.goals[key];
+      const next = Math.min(max, Math.max(min, cur + delta * step));
+      return { goals: { ...s.goals, [key]: next } };
+    });
+  }
+
+  // ---------- workout detail ----------
+  openDetail(id) { this.setState({ detailWorkoutId: id }); }
+  closeDetail() { this.setState({ detailWorkoutId: null }); }
+
+  // ---------- add workout flow ----------
+  openAdd() { this.setState({ add: { step: 'type' } }); }
+  closeAdd() { this.setState({ add: null }); }
+  addBack() {
+    this.setState(s => {
+      const st = s.add.step;
+      if (st === 'exercise' || st === 'cardioType') return { add: { step: 'type' } };
+      if (st === 'log') return { add: { ...s.add, step: 'exercise' } };
+      if (st === 'cardioLog') return { add: { ...s.add, step: 'cardioType' } };
+      return { add: null };
+    });
+  }
+  chooseStrength() { this.setState({ add: { step: 'exercise', type: 'strength' } }); }
+  chooseCardio() { this.setState({ add: { step: 'cardioType', type: 'cardio' } }); }
+  selectExercise(name) {
+    this.setState(s => ({ add: { ...s.add, step: 'log', exercise: name, sets: [{ reps: 8, weight: 95 }] } }));
+  }
+  selectCardioType(name) {
+    this.setState(s => ({ add: { ...s.add, step: 'cardioLog', cardioType: name, distance: 3.0, duration: 25 } }));
+  }
+  addSet() {
+    this.setState(s => ({ add: { ...s.add, sets: [...s.add.sets, { reps: 8, weight: s.add.sets[s.add.sets.length - 1]?.weight || 95 }] } }));
+  }
+  removeSet(idx) {
+    this.setState(s => ({ add: { ...s.add, sets: s.add.sets.filter((_, i) => i !== idx) } }));
+  }
+  bumpSet(idx, key, delta) {
+    this.setState(s => {
+      const sets = s.add.sets.map((set, i) => {
+        if (i !== idx) return set;
+        if (key === 'reps') return { ...set, reps: Math.max(1, set.reps + delta) };
+        return { ...set, weight: Math.max(0, set.weight + delta * 5) };
+      });
+      return { add: { ...s.add, sets } };
+    });
+  }
+  bumpCardio(key, delta) {
+    this.setState(s => {
+      const add = { ...s.add };
+      if (key === 'distance') add.distance = Math.max(0.1, +(add.distance + delta * 0.1).toFixed(1));
+      else add.duration = Math.max(1, add.duration + delta);
+      return { add };
+    });
+  }
+  saveWorkout() {
+    this.setState(s => {
+      const now = new Date();
+      let workout;
+      if (s.add.type === 'strength') {
+        workout = {
+          id: 'w' + Date.now(), type: 'strength', name: s.add.exercise, date: now,
+          emoji: '🏋️', iconBg: 'rgba(53,242,138,0.15)',
+          exercises: [{ name: s.add.exercise, sets: s.add.sets }],
+        };
+      } else {
+        workout = {
+          id: 'w' + Date.now(), type: 'cardio', name: s.add.cardioType, date: now,
+          emoji: CARDIO_EMOJI[s.add.cardioType] || '🏃', iconBg: 'rgba(255,122,51,0.15)',
+          distance: s.add.distance, duration: s.add.duration,
+        };
+      }
+      return {
+        workouts: [workout, ...s.workouts],
+        add: null,
+        streak: s.streak + 1,
+      };
+    });
+  }
+
+  setLogFilter(f) { this.setState({ logFilter: f }); }
+  setChartsTab(t) { this.setState({ chartsTab: t }); }
+  restartOnboarding() { this.setState({ screen: 'onboarding', onboardingStep: 0 }); }
+
+  // ---------- render helpers ----------
+  workoutSummary(w, now) {
+    if (w.type === 'strength') {
+      const totalSets = w.exercises.reduce((a, e) => a + e.sets.length, 0);
+      return `${w.exercises.length} exercise${w.exercises.length > 1 ? 's' : ''} · ${totalSets} sets`;
+    }
+    return `${w.distance} mi · ${w.duration} min`;
+  }
+
+  renderVals() {
+    const s = this.state;
+    const now = new Date();
+    const circ = 2 * Math.PI * 26;
+    const pct = (v, g) => Math.max(0, Math.min(1, v / g));
+    const offset = (p) => circ * (1 - p);
+
+    const stepsPct = pct(s.todaySteps, s.goals.dailySteps);
+    const calPct = pct(s.todayCalories, s.goals.dailyCalories);
+    const activePct = pct(s.todayActive, 60);
+
+    const weekWorkouts = s.workouts.filter(w => (now - w.date) < 7 * DAY_MS).length;
+    const weekPct = Math.min(1, weekWorkouts / s.goals.weeklyWorkouts);
+
+    const sortedWorkouts = [...s.workouts].sort((a, b) => b.date - a.date);
+
+    const mkCard = (w) => ({
+      name: w.name,
+      emoji: w.emoji,
+      iconBg: w.iconBg,
+      subtitle: this.workoutSummary(w, now),
+      meta: relDateLabel(w.date, now),
+      dateLabel: relDateLabel(w.date, now),
+      open: () => this.openDetail(w.id),
+    });
+
+    // recent 3 for dashboard
+    const recent = sortedWorkouts.slice(0, 3).map(mkCard);
+
+    // log groups (by relative label bucket)
+    const filtered = sortedWorkouts.filter(w => s.logFilter === 'all' || w.type === s.logFilter);
+    const bucketOrder = [];
+    const buckets = {};
+    filtered.forEach(w => {
+      const label = relDateLabel(w.date, now).match(/Today|Yesterday/) ? relDateLabel(w.date, now)
+        : (now - w.date) < 7 * DAY_MS ? 'This week' : (now - w.date) < 30 * DAY_MS ? 'This month' : 'Earlier';
+      if (!buckets[label]) { buckets[label] = []; bucketOrder.push(label); }
+      buckets[label].push(w);
+    });
+    const groups = bucketOrder.map(label => ({ label, items: buckets[label].map(mkCard) }));
+
+    const filterDef = [
+      { key: 'all', label: 'All' },
+      { key: 'strength', label: 'Strength' },
+      { key: 'cardio', label: 'Cardio' },
+    ].map(f => ({
+      label: f.label,
+      select: () => this.setLogFilter(f.key),
+      bg: s.logFilter === f.key ? '#35F28A' : '#15181A',
+      color: s.logFilter === f.key ? '#06120C' : 'rgba(245,247,245,0.6)',
+    }));
+
+    // charts
+    const chartDefs = [
+      { key: 'weight', label: 'Weight' },
+      { key: 'volume', label: 'Volume' },
+      { key: 'streak', label: 'Streak' },
+      { key: 'pr', label: 'PRs' },
+    ];
+    const chartsTabs = chartDefs.map(c => ({
+      label: c.label,
+      select: () => this.setChartsTab(c.key),
+      bg: s.chartsTab === c.key ? '#35F28A' : '#15181A',
+      color: s.chartsTab === c.key ? '#06120C' : 'rgba(245,247,245,0.6)',
+    }));
+
+    const wMin = Math.min(...s.weightLog.map(p => p.weight));
+    const wMax = Math.max(...s.weightLog.map(p => p.weight));
+    const wRange = Math.max(1, wMax - wMin);
+    const weightPoints = s.weightLog.map((p, i) => {
+      const x = (i / (s.weightLog.length - 1)) * 320;
+      const y = 110 - ((p.weight - wMin) / wRange) * 100;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    const weightLatest = s.weightLog[s.weightLog.length - 1].weight.toFixed(1);
+    const weightChange = s.weightLog[s.weightLog.length - 1].weight - s.weightLog[0].weight;
+
+    const volMax = Math.max(...s.volumeWeeks.map(w => w.volume));
+    const volumeWeeksVals = s.volumeWeeks.map(w => ({ label: w.label, barHeight: `${Math.max(6, (w.volume / volMax) * 100)}px` }));
+
+    const heatColors = ['rgba(255,255,255,0.06)', 'rgba(53,242,138,0.4)', '#35F28A'];
+    const heatCells = s.heat.map(v => ({ color: heatColors[v] }));
+
+    const prList = s.prList.map(p => ({
+      exercise: p.exercise, dateLabel: relDateLabel(p.date, now), weightLabel: `${p.weight} lb`,
+    }));
+
+    const social = s.social.map(r => ({
+      rank: r.rank, name: r.name, initial: r.initial, points: comma(r.points), meta: r.meta,
+      bg: r.me ? 'rgba(53,242,138,0.1)' : '#15181A',
+      border: r.me ? 'rgba(53,242,138,0.35)' : 'rgba(255,255,255,0.06)',
+      avatarBg: r.me ? '#35F28A' : 'rgba(122,168,255,0.6)',
+    }));
+
+    // detail
+    const detailW = s.detailWorkoutId ? s.workouts.find(w => w.id === s.detailWorkoutId) : null;
+    let detail = { active: false };
+    if (detailW) {
+      if (detailW.type === 'strength') {
+        const totalSets = detailW.exercises.reduce((a, e) => a + e.sets.length, 0);
+        const totalVolume = detailW.exercises.reduce((a, e) => a + e.sets.reduce((b, st) => b + st.reps * st.weight, 0), 0);
+        detail = {
+          active: true, close: () => this.closeDetail(),
+          name: detailW.name, emoji: detailW.emoji, iconBg: detailW.iconBg,
+          dateLabel: relDateLabel(detailW.date, now),
+          stat1Val: detailW.exercises.length, stat1Label: 'Exercises',
+          stat2Val: totalSets, stat2Label: 'Sets',
+          stat3Val: comma(totalVolume), stat3Label: 'Volume (lb)',
+          hasExercises: true,
+          exercises: detailW.exercises.map(e => ({
+            name: e.name,
+            sets: e.sets.map((st, i) => ({ n: i + 1, label: `${st.reps} × ${st.weight} lb` })),
+          })),
+        };
+      } else {
+        detail = {
+          active: true, close: () => this.closeDetail(),
+          name: detailW.name, emoji: detailW.emoji, iconBg: detailW.iconBg,
+          dateLabel: relDateLabel(detailW.date, now),
+          stat1Val: detailW.distance, stat1Label: 'Miles',
+          stat2Val: detailW.duration, stat2Label: 'Minutes',
+          stat3Val: (detailW.duration / detailW.distance).toFixed(1), stat3Label: 'Min/mi',
+          hasExercises: false, exercises: [],
+        };
+      }
+    }
+
+    // add flow
+    let add = { active: false };
+    if (s.add) {
+      const a = s.add;
+      add = {
+        active: true,
+        back: () => this.addBack(),
+        close: () => this.closeAdd(),
+        isType: a.step === 'type',
+        isExercise: a.step === 'exercise',
+        isCardioType: a.step === 'cardioType',
+        isLog: a.step === 'log',
+        isCardioLog: a.step === 'cardioLog',
+        chooseStrength: () => this.chooseStrength(),
+        chooseCardio: () => this.chooseCardio(),
+        title: a.step === 'type' ? 'Add Workout'
+          : a.step === 'exercise' ? 'Choose Exercise'
+          : a.step === 'cardioType' ? 'Choose Activity'
+          : a.step === 'log' ? a.exercise
+          : a.cardioType,
+        exerciseOptions: EXERCISE_LIB.strength.map(name => ({ name, select: () => this.selectExercise(name) })),
+        cardioOptions: EXERCISE_LIB.cardio.map(name => ({ name, select: () => this.selectCardioType(name) })),
+        exercise: a.exercise,
+        cardioType: a.cardioType,
+        sets: (a.sets || []).map((st, i) => ({
+          n: i + 1, reps: st.reps, weight: st.weight,
+          incReps: () => this.bumpSet(i, 'reps', 1), decReps: () => this.bumpSet(i, 'reps', -1),
+          incWeight: () => this.bumpSet(i, 'weight', 1), decWeight: () => this.bumpSet(i, 'weight', -1),
+          remove: () => this.removeSet(i),
+        })),
+        addSet: () => this.addSet(),
+        distanceLabel: a.distance,
+        duration: a.duration,
+        paceLabel: a.distance ? `${(a.duration / a.distance).toFixed(1)} min/mi` : '—',
+        incDistance: () => this.bumpCardio('distance', 1), decDistance: () => this.bumpCardio('distance', -1),
+        incDuration: () => this.bumpCardio('duration', 1), decDuration: () => this.bumpCardio('duration', -1),
+        showSave: a.step === 'log' || a.step === 'cardioLog',
+        saveLabel: 'Save Workout',
+        save: () => this.saveWorkout(),
+      };
+    }
+
+    return {
+      isOnboarding: s.screen === 'onboarding',
+      isMainApp: s.screen === 'main',
+      onboarding: {
+        isWelcome: s.onboardingStep === 0,
+        isGoals: s.onboardingStep === 1,
+        isDone: s.onboardingStep === 2,
+        next: () => this.onbNext(),
+        finish: () => this.onbFinish(),
+      },
+      profileFirstName: s.profile.firstName,
+      profileName: s.profile.name,
+      profileInitial: s.profile.name[0],
+      goals: {
+        weeklyWorkouts: s.goals.weeklyWorkouts,
+        dailyStepsLabel: comma(s.goals.dailySteps),
+        dailyCalories: comma(s.goals.dailyCalories),
+        incWorkouts: () => this.bumpGoal('weeklyWorkouts', 1, 1, 14, 1),
+        decWorkouts: () => this.bumpGoal('weeklyWorkouts', -1, 1, 14, 1),
+        incSteps: () => this.bumpGoal('dailySteps', 1, 2000, 30000, 500),
+        decSteps: () => this.bumpGoal('dailySteps', -1, 2000, 30000, 500),
+        incCalories: () => this.bumpGoal('dailyCalories', 1, 1000, 5000, 50),
+        decCalories: () => this.bumpGoal('dailyCalories', -1, 1000, 5000, 50),
+      },
+      nav: {
+        goDashboard: () => this.goTab('dashboard'),
+        goLog: () => this.goTab('log'),
+        goCharts: () => this.goTab('charts'),
+        goSocial: () => this.goTab('social'),
+        goProfile: () => this.goTab('profile'),
+      },
+      tabActive: {
+        dashboard: s.activeTab === 'dashboard', log: s.activeTab === 'log',
+        charts: s.activeTab === 'charts', social: s.activeTab === 'social', profile: s.activeTab === 'profile',
+        dashboardColor: s.activeTab === 'dashboard' ? '#35F28A' : 'rgba(245,247,245,0.4)',
+        logColor: s.activeTab === 'log' ? '#35F28A' : 'rgba(245,247,245,0.4)',
+        chartsColor: s.activeTab === 'charts' ? '#35F28A' : 'rgba(245,247,245,0.4)',
+        socialColor: s.activeTab === 'social' ? '#35F28A' : 'rgba(245,247,245,0.4)',
+        profileColor: s.activeTab === 'profile' ? '#35F28A' : 'rgba(245,247,245,0.4)',
+      },
+      dashboard: {
+        dateLabel: now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }),
+        greeting: `Hi, ${s.profile.firstName}`,
+        stepsCirc: circ.toFixed(1), stepsOffset: offset(stepsPct).toFixed(1), stepsLabel: comma(s.todaySteps),
+        calCirc: circ.toFixed(1), calOffset: offset(calPct).toFixed(1), calLabel: comma(s.todayCalories),
+        activeCirc: circ.toFixed(1), activeOffset: offset(activePct).toFixed(1), activeLabel: `${s.todayActive}m`,
+        weekCount: weekWorkouts, weekGoal: s.goals.weeklyWorkouts, weekPctLabel: `${Math.round(weekPct * 100)}%`,
+        streak: s.streak,
+        recent,
+      },
+      log: { openAdd: () => this.openAdd(), filters: filterDef, groups },
+      charts: {
+        tabs: chartsTabs,
+        isWeight: s.chartsTab === 'weight', isVolume: s.chartsTab === 'volume',
+        isStreak: s.chartsTab === 'streak', isPR: s.chartsTab === 'pr',
+        weightLatest: `${weightLatest} lb`,
+        weightChangeLabel: `${weightChange <= 0 ? '' : '+'}${weightChange.toFixed(1)} lb`,
+        weightPoints,
+        weightStartLabel: fmtDate(s.weightLog[0].date),
+        volumeWeeks: volumeWeeksVals,
+        heatCells,
+        prList,
+      },
+      social: { rows: social },
+      profile: {
+        memberSince: s.profile.memberSince,
+        totalWorkouts: s.workouts.length,
+        restart: () => this.restartOnboarding(),
+      },
+      detail,
+      add,
+    };
+  }
+}
+
+</script>
+</body>
+</html>
