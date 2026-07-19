@@ -283,6 +283,28 @@
   .test-table .elite-src a { color: var(--text-muted); }
   .test-table .elite-badge { display: inline-block; font-size: 8.5px; font-weight: 700; text-transform: uppercase; padding: 1px 4px; border-radius: 4px; margin-left: 4px; background: var(--accent-track); color: var(--accent-strong); }
   .delta-flat { color: var(--text-muted); }
+  .test-table td.best { background: var(--accent-wash); font-weight: 700; box-shadow: inset 3px 0 0 var(--accent); }
+
+  /* ---------- compare page ---------- */
+  .compare-picker { display: flex; gap: 10px; flex-wrap: wrap; }
+  .compare-picker select {
+    flex: 1; min-width: 180px; font-family: inherit; font-size: 12.5px; color: var(--text-primary);
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px;
+    padding: 7px 8px; cursor: pointer;
+  }
+  .compare-heads { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 16px; }
+  .compare-head { background: var(--surface-1); border: 1px solid var(--border); border-top: 3px solid var(--accent); border-radius: var(--card-radius); padding: 14px 16px; }
+  .compare-head .ch-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .avatar-md {
+    width: 46px; height: 46px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700; color: #fff;
+  }
+  .compare-head .ch-name { font-weight: 700; font-size: 14.5px; }
+  .compare-head .ch-pos { font-size: 11.5px; color: var(--text-secondary); margin-top: 2px; }
+  .compare-head .ch-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .compare-head .ch-stat { text-align: center; background: var(--page-plane); border-radius: 8px; padding: 6px 4px; }
+  .compare-head .ch-stat .csv { font-size: 15px; font-weight: 700; }
+  .compare-head .ch-stat .csl { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .03em; margin-top: 2px; }
 
   .gauge-wrap { display: flex; flex-direction: column; align-items: center; }
   .gauge-value-label { font-size: 12px; color: var(--text-muted); margin-top: -64px; text-align: center; }
@@ -327,6 +349,7 @@
     <nav class="nav">
       <button id="navOverview" class="active">📊 Squad overview</button>
       <button id="navProfile">🧍 Players database</button>
+      <button id="navCompare">⚖️ Compare players</button>
     </nav>
 
     <div class="side-block">
@@ -337,15 +360,6 @@
         <option value="Defender">Defender</option>
         <option value="Midfielder">Midfielder</option>
         <option value="Forward">Forward</option>
-      </select>
-    </div>
-    <div class="side-block">
-      <label for="fAge">Age band</label>
-      <select id="fAge">
-        <option value="All">All ages</option>
-        <option value="young">25 and under</option>
-        <option value="mid">26–30</option>
-        <option value="senior">31 and over</option>
       </select>
     </div>
     <div class="side-block">
@@ -515,6 +529,39 @@
         <h3>Squad leaderboard — <span id="lbMetricLabel"></span></h3>
         <p class="card-sub">Ranked within current filter · selected player highlighted</p>
         <div id="leaderboardPanel"></div>
+      </div>
+    </div>
+
+    <!-- ================= COMPARE TAB ================= -->
+    <div class="tab-panel" id="panelCompare">
+      <div class="topbar">
+        <div class="breadcrumb"><b>Apollon FC</b> › Compare players</div>
+        <div class="result-count" id="resultCountCompare"></div>
+      </div>
+
+      <div class="card full">
+        <h3>Select players to compare</h3>
+        <p class="card-sub">Pick 2 or 3 players — compares across the full squad, independent of the sidebar position filter</p>
+        <div class="compare-picker">
+          <select id="cmpSel0"></select>
+          <select id="cmpSel1"></select>
+          <select id="cmpSel2"></select>
+        </div>
+      </div>
+
+      <div class="compare-heads" id="compareHeads"></div>
+
+      <div class="card full">
+        <h3>Physical profile overlay</h3>
+        <p class="card-sub">Percentile within full squad · 8 axes</p>
+        <div class="legend" id="compareLegend"></div>
+        <div id="chartCompareRadar"></div>
+      </div>
+
+      <div class="card full">
+        <h3>Test-by-test comparison</h3>
+        <p class="card-sub">Best value in each row is highlighted</p>
+        <div class="table-scroll"><table class="test-table" id="compareTable"></table></div>
       </div>
     </div>
 
@@ -783,10 +830,9 @@ function initials(name) {
 }
 
 /* ---------- state ---------- */
-const state = { pos: 'All', age: 'All', metric: 'overall', player: players[0].name, tab: 'overview' };
+const state = { pos: 'All', metric: 'overall', player: players[0].name, tab: 'overview', compare: [players[0].name, players[1] ? players[1].name : '', ''] };
 
 document.getElementById('fPos').addEventListener('change', e => { state.pos = e.target.value; render(); });
-document.getElementById('fAge').addEventListener('change', e => { state.age = e.target.value; render(); });
 document.getElementById('fMetric').addEventListener('change', e => { state.metric = e.target.value; render(); });
 document.getElementById('fMetricReset').addEventListener('click', () => {
   state.metric = 'overall';
@@ -796,16 +842,36 @@ document.getElementById('fMetricReset').addEventListener('click', () => {
 
 const navOverview = document.getElementById('navOverview');
 const navProfile = document.getElementById('navProfile');
+const navCompare = document.getElementById('navCompare');
 function switchTab(tab) {
   state.tab = tab;
   document.getElementById('panelOverview').classList.toggle('active', tab === 'overview');
   document.getElementById('panelProfile').classList.toggle('active', tab === 'profile');
+  document.getElementById('panelCompare').classList.toggle('active', tab === 'compare');
   navOverview.classList.toggle('active', tab === 'overview');
   navProfile.classList.toggle('active', tab === 'profile');
+  navCompare.classList.toggle('active', tab === 'compare');
 }
 navOverview.addEventListener('click', () => switchTab('overview'));
 navProfile.addEventListener('click', () => switchTab('profile'));
+navCompare.addEventListener('click', () => switchTab('compare'));
 document.getElementById('backToOverview').addEventListener('click', () => switchTab('overview'));
+
+/* compare-slot pickers */
+const COMPARE_COLORS = ['var(--series-1)', 'var(--accent)', 'var(--series-2)'];
+function populateCompareSelects() {
+  const optsHtml = ['<option value="">— none —</option>']
+    .concat(players.slice().sort((a, b) => a.name.localeCompare(b.name)).map(p => `<option value="${p.name}">${p.name} (${p.group[0]})</option>`))
+    .join('');
+  [0, 1, 2].forEach(i => { document.getElementById('cmpSel' + i).innerHTML = optsHtml; });
+}
+populateCompareSelects();
+[0, 1, 2].forEach(i => {
+  document.getElementById('cmpSel' + i).addEventListener('change', e => {
+    state.compare[i] = e.target.value;
+    render();
+  });
+});
 
 function selectPlayer(name) {
   state.player = name;
@@ -825,9 +891,6 @@ themeBtn.addEventListener('click', () => {
 function filteredPlayers() {
   return players.filter(p => {
     if (state.pos !== 'All' && p.group !== state.pos) return false;
-    if (state.age === 'young' && p.age > 25) return false;
-    if (state.age === 'mid' && (p.age < 26 || p.age > 30)) return false;
-    if (state.age === 'senior' && p.age < 31) return false;
     return true;
   });
 }
@@ -1644,6 +1707,149 @@ function renderProfile(pool) {
   renderLeaderboardPanel(pool);
 }
 
+/* ---------- compare tab ---------- */
+function renderCompareHeads(selected) {
+  const wrap = document.getElementById('compareHeads');
+  wrap.innerHTML = '';
+  selected.forEach((name, si) => {
+    const player = players.find(p => p.name === name);
+    if (!player) return;
+    const overall = overallScoreFor(player, players);
+    const speed = categoryScoreFor(player, players, CATEGORIES.speed.keys);
+    const screening = categoryScoreFor(player, players, CATEGORIES.screening.keys);
+    const anthro = categoryScoreFor(player, players, CATEGORIES.anthro.keys);
+    const photo = PLAYER_PHOTOS[player.name];
+    const avatarStyle = photo ? `background:url(${photo}) center/cover no-repeat` : `background:${GROUP_COLOR[player.group]}`;
+    const div = document.createElement('div');
+    div.className = 'compare-head';
+    div.style.borderTopColor = COMPARE_COLORS[si % COMPARE_COLORS.length];
+    div.innerHTML = `
+      <div class="ch-top">
+        <div class="avatar-md" style="${avatarStyle}">${photo ? '' : initials(player.name)}</div>
+        <div>
+          <div class="ch-name">${player.name}</div>
+          <div class="ch-pos">${player.position} · #${player.id}</div>
+        </div>
+      </div>
+      <div class="ch-stats">
+        <div class="ch-stat"><div class="csv">${overall.toFixed(0)}</div><div class="csl">Overall</div></div>
+        <div class="ch-stat"><div class="csv">${speed != null ? speed.toFixed(0) : '–'}</div><div class="csl">Speed/power</div></div>
+        <div class="ch-stat"><div class="csv">${screening != null ? screening.toFixed(0) : '–'}</div><div class="csl">Screening</div></div>
+        <div class="ch-stat"><div class="csv">${anthro != null ? anthro.toFixed(0) : '–'}</div><div class="csl">Anthro</div></div>
+      </div>`;
+    wrap.appendChild(div);
+  });
+}
+
+function renderCompareRadar(containerId, selected) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  const withSym = withSymmetry(players);
+  const ranges = normalizeAxes(withSym);
+
+  const W = 480, H = 420, cx = W / 2, cy = H / 2 - 6, radius = 150;
+  const n = RADAR_AXES.length;
+  const angle = i => -Math.PI / 2 + (i * 2 * Math.PI) / n;
+  const pt = (i, r) => [cx + r * radius / 100 * Math.cos(angle(i)), cy + r * radius / 100 * Math.sin(angle(i))];
+
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}` });
+
+  [25, 50, 75, 100].forEach(ring => {
+    const pts = RADAR_AXES.map((_, i) => pt(i, ring).join(',')).join(' ');
+    svg.appendChild(svgEl('polygon', { points: pts, fill: 'none', class: 'grid-line' }));
+  });
+  RADAR_AXES.forEach((ax, i) => {
+    const [x, y] = pt(i, 100);
+    svg.appendChild(svgEl('line', { x1: cx, y1: cy, x2: x, y2: y, class: 'grid-line' }));
+    const [lx, ly] = pt(i, 118);
+    const t = svgEl('text', { x: lx, y: ly, class: 'axis-label', 'text-anchor': 'middle', 'dominant-baseline': 'middle' });
+    t.textContent = ax.label;
+    svg.appendChild(t);
+  });
+
+  function seriesPoints(getScore) { return RADAR_AXES.map((ax, i) => pt(i, getScore(ax))); }
+
+  const avgPts = seriesPoints(ax => {
+    const scores = withSym.map(p => axisScore(p, ax, ranges));
+    return scores.reduce((s, v) => s + v, 0) / scores.length;
+  });
+  svg.appendChild(svgEl('polygon', { points: avgPts.map(p => p.join(',')).join(' '), fill: 'none', stroke: 'var(--text-muted)', 'stroke-width': 2, 'stroke-dasharray': '5,4' }));
+
+  selected.forEach((name, si) => {
+    const player = withSym.find(p => p.name === name);
+    if (!player) return;
+    const color = COMPARE_COLORS[si % COMPARE_COLORS.length];
+    const pts = seriesPoints(ax => axisScore(player, ax, ranges));
+    svg.appendChild(svgEl('polygon', { points: pts.map(p => p.join(',')).join(' '), fill: color, opacity: 0.12 }));
+    svg.appendChild(svgEl('polygon', { points: pts.map(p => p.join(',')).join(' '), fill: 'none', stroke: color, 'stroke-width': 2.2 }));
+    pts.forEach(([x, y], i) => {
+      const dot = svgEl('circle', { cx: x, cy: y, r: 4, fill: color, stroke: 'var(--surface-1)', 'stroke-width': 2 });
+      const hit = svgEl('circle', { cx: x, cy: y, r: 12, fill: 'transparent' });
+      [dot, hit].forEach(el => {
+        el.style.cursor = 'pointer';
+        el.addEventListener('pointerenter', e => showTip(e, `<b>${name}</b><br>${RADAR_AXES[i].label}: ${axisScore(player, RADAR_AXES[i], ranges).toFixed(0)}th percentile`));
+        el.addEventListener('pointermove', moveTip);
+        el.addEventListener('pointerleave', hideTip);
+      });
+      svg.appendChild(hit); svg.appendChild(dot);
+    });
+  });
+
+  container.appendChild(svg);
+}
+
+function renderCompareTable(selected) {
+  const table = document.getElementById('compareTable');
+  table.innerHTML = '';
+  const chosen = selected.map(name => players.find(p => p.name === name)).filter(Boolean);
+  if (chosen.length < 2) {
+    table.innerHTML = '<tbody><tr><td style="padding:14px;color:var(--text-muted)">Pick at least 2 players above to compare.</td></tr></tbody>';
+    return;
+  }
+
+  const thead = document.createElement('thead');
+  thead.innerHTML = `<tr><th>Test</th>${chosen.map((p, i) => `<th style="text-align:right;color:${COMPARE_COLORS[i % COMPARE_COLORS.length]}">${p.name}</th>`).join('')}</tr>`;
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  let lastCategory = null;
+  PROFILE_METRICS.forEach(m => {
+    if (m.category !== lastCategory) {
+      lastCategory = m.category;
+      const catRow = document.createElement('tr');
+      catRow.innerHTML = `<td colspan="${chosen.length + 1}" style="font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);padding-top:14px;">${CATEGORIES[m.category].label}</td>`;
+      tbody.appendChild(catRow);
+    }
+    const vals = chosen.map(p => p[m.key]);
+    const validVals = vals.filter(v => v !== null && v !== undefined && !isNaN(v));
+    const bestVal = validVals.length ? (m.invert ? Math.min(...validVals) : Math.max(...validVals)) : null;
+
+    const tr = document.createElement('tr');
+    let cells = `<td>${m.label}</td>`;
+    vals.forEach(v => {
+      if (v === null || v === undefined || isNaN(v)) { cells += `<td class="num muted-cell">–</td>`; return; }
+      const isBest = validVals.length > 1 && v === bestVal;
+      cells += `<td class="num${isBest ? ' best' : ''}">${v.toFixed(m.dp)}${m.unit ? ' ' + m.unit : ''}</td>`;
+    });
+    tr.innerHTML = cells;
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+}
+
+function renderCompare() {
+  const selected = state.compare.filter(Boolean);
+  document.getElementById('resultCountCompare').textContent = `${selected.length} of 3 slots filled`;
+  [0, 1, 2].forEach(i => { document.getElementById('cmpSel' + i).value = state.compare[i] || ''; });
+
+  renderCompareHeads(selected);
+  renderCompareRadar('chartCompareRadar', selected);
+  const legend = document.getElementById('compareLegend');
+  legend.innerHTML = selected.map((name, i) => `<span class="item"><span class="line" style="background:${COMPARE_COLORS[i % COMPARE_COLORS.length]}"></span>${name}</span>`).join('')
+    + '<span class="item"><span class="dash"></span>Squad average</span>';
+  renderCompareTable(selected);
+}
+
 /* ---------- main render ---------- */
 function render() {
   const pool = filteredPlayers();
@@ -1666,6 +1872,7 @@ function render() {
   renderTable(pool);
 
   renderProfile(pool);
+  renderCompare();
 }
 
 render();
